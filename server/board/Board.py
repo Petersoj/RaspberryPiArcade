@@ -19,8 +19,12 @@ class Board:
         self.board[y][x] = value
 
     def get(self, x: int, y: int) -> bool:
+        x = int(x)
+        y = int(y)
         if not self.contains(x, y):
             return True
+        print(x)
+        print(y)
         return self.board[y][x]
 
     def contains(self, x:int, y: int):
@@ -28,7 +32,12 @@ class Board:
 
     def print(self):
         for row in self.board:
-            print(row)
+            for item in row:
+                if item:
+                    print("■", end="")
+                else:
+                    print("□", end="")
+            print()
 
     def getBoard(self):
         return self.board
