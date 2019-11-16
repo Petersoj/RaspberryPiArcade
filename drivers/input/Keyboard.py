@@ -3,8 +3,16 @@ from drivers.display.Screen import Screen
 
 class Keyboard:
 
-    def open(self, tkDriver: Screen):
-        self.tkDriver = tkDriver
+    def open(self):
+        pass
+
+    @staticmethod
+    def _keyDown(event):
+        print(f"pressed key '{event.char}'")
+
+    @staticmethod
+    def _keyUp(event):
+        print(f"released key '{event.char}'")
 
     def isUpPressed(self):
         print("up pressed")
