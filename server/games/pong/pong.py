@@ -11,10 +11,31 @@ class Pong:
         self.width: int = width
         self.height: int = height
         self.ballPosition: List[float, float] = [width / 2, height / 2]
-        self.ballDeltas: Tuple[float, float] = (1, 0.25)
-        self.paddles: List[int] = [3, -10, -10, -10]
-        self.players: List[WebSocketServer] = [None, None, None, None]
+        self.ballDeltas: Tuple[float, float] = (1, 0.33)
+        self.paddles: List[int] = [int(height / 2), int(height / 2), -10, -10]
+        self.players: List["Player"] = [None, None, None, None]
         self.clients: List[WebSocketServer] = []
+        self.running = False
+
+    def start(self):
+        self.running = True
+
+    def isRunning(self) -> bool:
+        count = 0
+        for player in self.players:
+            if player is not None:
+                count += 1
+        print(self.players)
+        return count > 1
+
+    def move(self, player: int, direction: int):
+        self.paddles[player] = max(1, min(self.paddles[player] + direction, self.width - 2))
+
+    def addPlayer(self, palyer: "Player"):
+        for i in range(len(self.players)):
+            if self.players[i] is None:
+                self.players[i] = palyer
+                return
 
     async def connect(self, websocket: WebSocketServer):
         self.clients.append(websocket)
@@ -57,6 +78,13 @@ class Pong:
                     continue
 
     def update(self):
+        for index, player in enumerate(self.players):
+            if player is None:
+                continue
+            if player.isRightPressed():
+                self.move(index, 1)
+            if player.isLeftPressed():
+                self.move(index, -1)
         board: Board = Board(self.width, self.height)
         self.drawPaddles(board, self.paddles)
         self.runBallLogic(board)
@@ -76,14 +104,14 @@ class Pong:
 
         if board.get(nextBallPosition[0], nextBallPosition[1]):
 
-            if nextBallPosition[0] == 0:
+            if nextBallPosition[0] == -1:
                 self.kill(0)
-            elif nextBallPosition[1] == self.width - 1:
+            elif nextBallPosition[1] == self.width:
                 self.kill(1)
 
-            if nextBallPosition[1] == 0:
+            if nextBallPosition[1] == -1:
                 self.kill(2)
-            elif nextBallPosition[1] == self.height - 1:
+            elif nextBallPosition[1] == self.height:
                 self.kill(3)
 
             if board.get(nextBallPosition[0], ballPosition[1]):
@@ -96,8 +124,6 @@ class Pong:
         ballPosition = self.getNextBallPosition(board)
         self.ballPosition = ballPosition
 
-        print(f"position: {ballPosition}")
-
         self.ballPosition = ballPosition
 
         board.write(round(ballPosition[0]), round(ballPosition[1]), True)
@@ -107,10 +133,8 @@ class Pong:
     def bounce(self, delta: float) -> float:
         next: float = -delta + (random() - 0.5) / 4
         if delta >= 0:
-            print(f"updating positive {delta}")
             return max(min(-0.1, next), -1)
         else:
-            print(f"updating negative {delta}")
             return min(max(0.1, next), 1)
 
     def getNextBallPosition(self, board: Board):
@@ -126,19 +150,20 @@ class Pong:
         websocket: WebSocketServer = self.players[player]
         self.players[player] = None
         self.paddles[player] = -10
-        if not websocket is None:
-            websocket.send(json.dumps({"type": "KILL"}))
+
 
     def drawPaddles(self, board: Board, paddles: List[int]):
         for index, position in enumerate(paddles):
             base: int = 0
-            shiftDirection: int = - (index % 2)
+            shiftDirection: int =  -1
             if index == 1:
+                shiftDirection = 1
                 base = self.width - 1
             if index == 3:
+                shiftDirection = 1
                 base = self.height - 1
             for offset in range(-1, 2):
                 if index < 2:
-                    board.write(base, self.height + (position + offset) * shiftDirection, True)
+                    board.write(base, int(abs((position + offset) * shiftDirection)), True)
                 elif index < 4:
-                    board.write(self.width + (position + offset) * shiftDirection, base, True)
+                    board.write(int(abs((position + offset) * shiftDirection)), base, True)

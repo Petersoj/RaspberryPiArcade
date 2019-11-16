@@ -3,6 +3,7 @@ import websockets
 from server.games.pong.pong import Pong
 from time import sleep
 from threading import Thread
+from Player import Player
 
 class Server:
 
@@ -21,8 +22,14 @@ class Server:
 
     def updateGame(self) -> None:
         while True:
-            sleep(1)
-            self.game.update()
+            self.game.addPlayer(Player())
+            self.game.addPlayer(Player())
+            self.game.start()
+            print(self.game.isRunning())
+            while self.game.isRunning():
+                sleep(1)
+                self.game.update()
+            self.game = Pong(8,8)
 
 
     def start(self):
