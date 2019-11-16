@@ -5,6 +5,10 @@ from ..board import Board
 # (0, 0) is top left of 2D LED matrix
 x_pins = [18, 23, 24, 25, 8, 7, 1, 12]
 y_pins = [2, 3, 4, 17, 27, 22, 10, 9]
+p1_up_pin = 20
+p1_down_pin = 21
+p2_up_pin = 19
+p2_down_pin = 26
 
 GPIO.setmode(GPIO.BCM)
 GPIO.cleanup()
@@ -17,6 +21,11 @@ for y_pin in range(len(y_pins)):
     GPIO.setup(y_pins[y_pin], GPIO.OUT)
     GPIO.output(y_pins[y_pin], GPIO.LOW)
 
+GPIO.setup(p1_up_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(p1_down_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(p2_up_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(p2_down_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+
 
 def update_led_matrix(board: Board):
     for row in range(board.height):
@@ -26,4 +35,20 @@ def update_led_matrix(board: Board):
 
             GPIO.output(y_pins[row], gpio_output)
             GPIO.output(x_pins[col], gpio_output)
+
+
+def is_p1_up():
+    return GPIO.input(p1_up_pin) == GPIO.HIGH
+
+
+def is_p1_down():
+    return GPIO.input(p1_down_pin) == GPIO.HIGH
+
+
+def is_p2_up():
+    return GPIO.input(p2_up_pin) == GPIO.HIGH
+
+
+def is_p2_down():
+    return GPIO.input(p2_down_pin) == GPIO.HIGH
 
