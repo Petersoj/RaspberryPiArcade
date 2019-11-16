@@ -22,10 +22,9 @@ class Server:
 
     def updateGame(self) -> None:
         while True:
-            self.game.addPlayer(Player())
-            self.game.addPlayer(Player())
+            self.game.addPlayer(Player(1))
+            self.game.addPlayer(Player(2))
             self.game.start()
-            print(self.game.isRunning())
             while self.game.isRunning():
                 sleep(1)
                 self.game.update()

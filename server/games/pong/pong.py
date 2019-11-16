@@ -1,6 +1,7 @@
 from typing import List, Tuple
 from websockets import WebSocketServer
 from ...board.Board import Board
+from ...leddriver.leddriver import update_led_matrix
 from random import random
 import json
 import math
@@ -91,6 +92,7 @@ class Pong:
         self.publishBoard(board)
 
     def publishBoard(self, board: Board):
+        update_led_matrix(board)
         board.print()
         for client in self.clients:
             if not client is None:
