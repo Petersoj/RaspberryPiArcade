@@ -10,7 +10,6 @@ class Server:
     def __init__(self, port: int):
         self.port = port
         self.game = Pong(8, 8)
-        self.players: Player = [Player(0), Player(1)]
 
     async def onConnect(self, websocket, path):
         print("connecting")
@@ -23,13 +22,14 @@ class Server:
 
     def updateGame(self) -> None:
         while True:
-            sleep(1)
-            for player in self.players:
-                if player.isRightPressed():
-                    self.game.move(player.player, 1)
-                if player.isLeftPressed():
-                    self.game.move(player.player, -1)
-            self.game.update()
+            self.game.addPlayer(Player())
+            self.game.addPlayer(Player())
+            self.game.start()
+            print(self.game.isRunning())
+            while self.game.isRunning():
+                sleep(1)
+                self.game.update()
+            self.game = Pong(8,8)
 
 
     def start(self):
