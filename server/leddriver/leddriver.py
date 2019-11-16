@@ -10,10 +10,12 @@ GPIO.setmode(GPIO.BCM)
 GPIO.cleanup()
 
 for x_pin in range(len(x_pins)):
-    GPIO.setup(x_pin, GPIO.OUT)
+    GPIO.setup(x_pins[x_pin], GPIO.OUT)
+    GPIO.output(x_pins[x_pin], GPIO.LOW)
 
 for y_pin in range(len(y_pins)):
-    GPIO.setup(y_pin, GPIO.OUT)
+    GPIO.setup(y_pins[y_pin], GPIO.OUT)
+    GPIO.output(y_pins[y_pin], GPIO.LOW)
 
 
 def update_led_matrix(board: Board):
@@ -22,6 +24,6 @@ def update_led_matrix(board: Board):
             board_on: bool = board.board[row][col]
             gpio_output = GPIO.HIGH if board_on else GPIO.LOW
 
-            GPIO.output(x_pins[col], gpio_output)
             GPIO.output(y_pins[row], gpio_output)
+            GPIO.output(x_pins[col], gpio_output)
 
