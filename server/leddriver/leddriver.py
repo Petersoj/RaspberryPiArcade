@@ -16,7 +16,7 @@ for y_pin in range(len(y_pins)):
     GPIO.setup(y_pin, GPIO.OUT)
 
 
-def update_led_matrix(self, board: Board):
+def update_led_matrix(board: Board):
     for row in range(board.height):
         for col in range(board.width):
             board_on: bool = board.board[row][col]
