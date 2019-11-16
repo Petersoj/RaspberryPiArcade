@@ -1,5 +1,5 @@
 import RPi.GPIO as GPIO
-from ..board import Board
+from ..board.Board import Board
 
 inited = False
 
