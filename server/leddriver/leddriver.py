@@ -14,15 +14,14 @@ p2_down_pin = 26
 
 if not inited:
     GPIO.setmode(GPIO.BCM)
-    GPIO.cleanup()
 
-    for x_pin in range(len(x_pins)):
+    for x_pin in x_pins:
         print(x_pin)
-        GPIO.setup(x_pins[x_pin], GPIO.OUT)
+        GPIO.setup(x_pin, GPIO.OUT)
 
-    for y_pin in range(len(y_pins)):
+    for y_pin in y_pins:
         print(y_pin)
-        GPIO.setup(y_pins[y_pin], GPIO.OUT)
+        GPIO.setup(y_pin, GPIO.OUT)
 
     GPIO.setup(p1_up_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
     GPIO.setup(p1_down_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
