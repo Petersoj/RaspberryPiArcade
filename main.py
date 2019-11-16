@@ -2,7 +2,7 @@ import sys
 from games.Snake import Snake
 from drivers.display.Screen import Screen as ScreenDriver
 from drivers.input.Keyboard import Keyboard as KeyboardDriver
-from server import Server
+from Server import Server
 from client import Client
 
 for s in sys.argv:

@@ -26,5 +26,9 @@ class Board:
     def contains(self, x:int, y: int):
         return (0 <= x < self.width) and (0 <= y < self.height)
 
-    def getJson(self):
-        return json.dump(self.board)
+    def print(self):
+        for row in self.board:
+            print(row)
+
+    def getBoard(self):
+        return self.board
